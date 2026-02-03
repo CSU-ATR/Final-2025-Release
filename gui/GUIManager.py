@@ -18,6 +18,12 @@ class GUIManager:
         self.GRBLConfigViewController = GRBLConfigViewController(self.root)
         self.PNAConfigViewController = PNAConfigViewController(self.root, calsets)
         self.TerminalViewController = TerminalViewController(self.root, commands)
+
+        # Wire GUI commit events to update axis config (focus-out / Enter)
+        try:
+            self.GRBLConfigViewController.set_change_callback(commands.update_axis_config)
+        except Exception:
+            pass
         
         #Grid layout to position frames on the root
         self.GRBLConfigViewController.gui.grid(row=0, column=0, sticky="nsew")
@@ -33,3 +39,6 @@ class GUIManager:
         
         # Set root window size
         self.root.geometry('480x600')
+    def update_configs(self):
+        self.GRBLConfigViewController.update_config_values()
+        self.PNAConfigViewController.update_config_values()

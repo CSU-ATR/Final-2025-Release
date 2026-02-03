@@ -1,8 +1,13 @@
 from data.DataManager import DataManager
 from interfaces.InterfaceManager import InterfaceManager
 from procedures.GCodeGenerator import generate_snake_commands
+from gui.PNAConfigViewController import PNAConfigViewController
+# Avoid importing GUIManager here to prevent circular imports. GUI values should be pushed into DataManager before starting a scan.
+USE_THREADING = True
 
-import threading
+if USE_THREADING:
+    import threading
+
 
 import time
 class ProcedureManager:
@@ -12,25 +17,38 @@ class ProcedureManager:
         self.dataManager = dataManager
         self.filename = "default"
         
-    def runScan(self, stop_event: threading.Event = None):
-        #self.guiManager.update_configs #Needs to take the gui config values and put them into the datamanager objects
+    # def runScan(self, stop_event: threading.Event = None): #dethread
+    def runScan(self, stop_event = None):
+        # Expect caller to have synced GUI values into dataManager before starting scan
         self.interfaceManager.configure_pna(self.dataManager.PNAConfig)
         commands = generate_snake_commands(self.dataManager.AxesConfig)
         
         for instruction in commands:
-            if stop_event.is_set():
-                self.interfaceManager.output_message("Interupting Scan")
+            if stop_event and stop_event.is_set():
+                self.interfaceManager.output_message("Interrupting Scan")
                 break
-            
+
             self.interfaceManager.grbl.send_instruction(instruction)
-            status = self.interfaceManager.grbl.get_status()
-            
-            while status == 'Run':
+
+            try:
                 status = self.interfaceManager.grbl.get_status()
-                if stop_event.is_set():
-                    self.interfaceManager.output_message("Interupting Scan")
+            except Exception as e:
+                self.interfaceManager.output_message(f"Error getting GRBL status: {e}", level="error")
+                break
+
+            while status == 'Run':
+                try:
+                    status = self.interfaceManager.grbl.get_status()
+                except Exception as e:
+                    self.interfaceManager.output_message(f"Error during status polling: {e}", level="error")
                     break
+
+                if stop_event and stop_event.is_set():
+                    self.interfaceManager.output_message("Interrupting Scan")
+                    break
+
                 time.sleep(0.05)
+
                 
             
             #Add an alarm catch so it doesnt dump info

@@ -129,6 +129,7 @@ class GRBL:
     def get_status(self):
         """Get the status of GRBL"""
         response = self.send_instruction('?')
+        
         if "Idle" in response:
             status = "Idle"
         elif "ALARM" in response:
@@ -139,7 +140,11 @@ class GRBL:
             status = "Fault"
         elif "Run" in response:
             status = "Run"
+        else:
+            status = "Unknown"  # ✅ Safe fallback
+
         return status
+
     
     def initialize(self):
         """Initialize, connection to Arduino, and GRBL software to recieve instructions"""

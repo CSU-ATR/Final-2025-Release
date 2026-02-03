@@ -1,0 +1,44 @@
+{
+    "X": {
+        "start": 0.0,
+        "stop": 0.0,
+        "resolution": 0.0,
+        "gCodeName": "X",
+        "axisName": "X"
+    },
+    "Y": {
+        "start": 0.0,
+        "stop": 0.0,
+        "resolution": 0.0,
+        "gCodeName": "Y",
+        "axisName": "Y"
+    },
+    "Z": {
+        "start": 0.0,
+        "stop": 0.0,
+        "resolution": 0.0,
+        "gCodeName": "Z",
+        "axisName": "Z"
+    },
+    "Polar": {
+        "start": 0.0,
+        "stop": 0.0,
+        "resolution": 0.0,
+        "gCodeName": "A",
+        "axisName": "Polar"
+    },
+    "Azimuth": {
+        "start": 0.0,
+        "stop": 0.0,
+        "resolution": 0.0,
+        "gCodeName": "B",
+        "axisName": "Azimuth"
+    },
+    "Elevation": {
+        "start": 0.0,
+        "stop": 0.0,
+        "resolution": 0.0,
+        "gCodeName": "C",
+        "axisName": "Elevation"
+    }
+}

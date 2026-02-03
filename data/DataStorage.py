@@ -28,7 +28,8 @@ class DataStorage:
         
         with h5py.File(file_path, 'w') as f:
             # Save scan data
-            f.create_dataset('scan_data', data=scan_data.data.to_numpy(), dtype='f8')
+            # f.create_dataset('scan_data', data=scan_data.data.to_numpy(), dtype='f8')
+            f.create_dataset('scan_data', data=scan_data.data.to_numpy())
             
             # Save column names
             f.create_dataset('columns', data=[col.encode('utf8') for col in scan_data.data.columns])

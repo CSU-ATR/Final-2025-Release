@@ -5,7 +5,11 @@ from procedures.ProcedureManager import ProcedureManager
 from gui.GRBLConfigViewController import GRBLConfigViewController
 from gui.PNAConfigViewController import PNAConfigViewController
 import os
-import threading
+USE_THREADING = True
+
+if USE_THREADING:
+    import threading
+
 from graphing.GraphManager import GraphManager
 
 class Commands:
@@ -24,6 +28,7 @@ class Commands:
         # "homeconfig": {"function": "home_configuration", "description": "Home all configured axes (placeholder)"},
         "resetgrbl": {"function": "reset_grbl", "description": "Send 0x18 to grbl to reset eeprom"},
         # "resetfirmware": {"function": "reset_grbl_firmware", "description": "Reset GRBL firmware to defaults from source"},
+        "setpna": {"function": "set_pna_config_get_function", "description": "Sets Config file Using GUI Values"},
         "savepna": {"function": "save_pna_configuration", "description": "Save PNA config [usage: savepna <filename>]"},
         "loadpna": {"function": "load_pna_configuration", "description": "Load PNA config [usage: loadpna <filename>]"},
         "saveaxes": {"function": "save_axes_configuration", "description": "Save axes config [usage: saveaxes <filename>]"},
@@ -48,7 +53,11 @@ class Commands:
         self.interfaces = interfaceManager
         self.datamanager = datamanager
         self.proceduremanager = ProcedureManager(interfaceManager=interfaceManager, dataManager=datamanager)
-        self.scan_stop_event = threading.Event()
+        if USE_THREADING:
+            self.scan_stop_event = threading.Event()
+        else:
+            self.scan_stop_event = None
+
         self.get_axes_config = None
         self.get_pna_config = None
         self.tk_root = None
@@ -148,15 +157,25 @@ class Commands:
             self.datamanager.AxesConfig = new_config
 
     def scan(self, args=None):
-        def scanthread():
-            self.proceduremanager.runScan(self.scan_stop_event)
-            
-        initialization_thread = threading.Thread(target=scanthread, daemon=True)
-        initialization_thread.start()
-    
-    def stopscan(self, args=None):
-        self.scan_stop_event.set()
+        # Sync GUI axis settings into DataManager before running the scan
+        try:
+            self.update_axis_config()
+        except Exception as e:
+            self.output_message(f"Failed to update axis configuration: {e}", level="error")
+            return
 
+        if USE_THREADING:
+            def scanthread():
+                self.proceduremanager.runScan(self.scan_stop_event)
+            initialization_thread = threading.Thread(target=scanthread, daemon=True)
+            initialization_thread.start()
+        else:
+            self.proceduremanager.runScan(self.scan_stop_event)
+
+    def stopscan(self, args=None):
+        if self.scan_stop_event:
+            self.scan_stop_event.set()
+            
     def graph(self, args=None):
         self.output_message("Launching Graphing Window")
         app = GraphManager(self.tk_root)
@@ -169,6 +188,18 @@ class Commands:
     def dev_function(self, args=None):
         self.output_message("Dev function currently does nothing ")
     
-    def update_axis_config(self):
-        pass
+    def update_axis_config(self):  # Sync GUI values into DataManager
+        # If getter isn't configured yet (startup ordering) silently return to avoid spamming UI
+        if not self.get_axes_config:
+            #self.output_message("No axes config getter configured", level="error")
+            return
+        try:
+            new_axes = self.get_axes_config()
+            if new_axes is None:
+                self.output_message("GUI returned no axis configuration", level="error")
+                return
+            self.datamanager.AxesConfig = new_axes
+            #self.output_message("Axes configuration updated from UI")
+        except Exception as e:
+            self.output_message(f"Error updating axes config: {e}", level="error")
 

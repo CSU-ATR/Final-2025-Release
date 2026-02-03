@@ -55,7 +55,10 @@ class GRBLConfigViewController:
         }
         
         self.gui = GRBLConfigView(parent, settings)  # Create an instance of MovementSettingsUI
-        
+
+    def set_change_callback(self, function):
+        """Set the function to be called when GUI fields are committed (focus-out or Enter)."""
+        self.gui.set_change_callback(function)
         
     def get_config_values(self):
         

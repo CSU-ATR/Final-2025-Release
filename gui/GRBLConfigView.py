@@ -44,6 +44,27 @@ class GRBLConfigView(tk.Frame):
                     spinbox.grid(row=self.settings["row_labels"].index(row_label)+1, column=self.settings["column_labels"].index(col_label)+1, padx=self.settings["padx"], pady=self.settings["pady"], sticky="ew")
                     self.entries[f"{row_label} {col_label}"] = spinbox
 
+                    # Commit events: validate then notify on focus-out or Enter
+                    spinbox.bind("<FocusOut>", lambda e, lbl=f"{row_label} {col_label}": self._on_entry_change(e, lbl))
+                    spinbox.bind("<Return>", lambda e, lbl=f"{row_label} {col_label}": self._on_entry_change(e, lbl))
+
+    def set_change_callback(self, callback):
+        """Register a callback to invoke when a field is committed (focus-out or Enter)."""
+        self.change_callback = callback
+
+    def _on_entry_change(self, event, label=None):
+        # Only call the change callback when the value is a valid float (avoids partial inputs)
+        try:
+            _ = float(event.widget.get())
+        except Exception:
+            return
+        if getattr(self, "change_callback", None):
+            try:
+                self.change_callback()
+            except Exception:
+                # Swallow exceptions to avoid GUI crashes; Commands will log errors
+                pass
+
     def get_parameters(self):
         parameters = {}
         for label, widget in self.entries.items():

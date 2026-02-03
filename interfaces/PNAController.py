@@ -6,6 +6,8 @@ import time
 import math
 import pandas as pd
 
+
+
 class PNA:
     """A class to interact with a Network Analyzer using SCPI commands."""
 
@@ -93,7 +95,7 @@ class PNA:
         """Configure the analyzer with user-specified settings."""
         self.send_command("*RST", expect_response=False)
         self.send_command("*CLS", expect_response=False)
-
+        
         self.send_command(f"CALCulate1:PARameter:DEFine 'Meas1', {settings.s_parameter}", expect_response=False)
         self.send_command("DISPlay:WINDow1:TRACe1:FEED 'Meas1'", expect_response=False)
 
