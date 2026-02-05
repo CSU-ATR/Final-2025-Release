@@ -4,6 +4,7 @@ from data.ScanInformation import ScanInformation
 from data.ConfigStorage import ConfigStorage
 from data.DataStorage import DataStorage
 
+
 class DataManager:
 
     def __init__(self):
@@ -21,7 +22,7 @@ class DataManager:
         self.ScanInformation.update_timestamp()
         self.ScanInformation.update_dataframe(new_data, positions)
         self.save_scan_data_csv()
-        self.save_scan_data_hdf5()
+        # self.save_scan_data_hdf5()
     
     def save_axes_config(self):
         self.ConfigStorage.save_axes_config(self.AxesConfig, self.data_filename)

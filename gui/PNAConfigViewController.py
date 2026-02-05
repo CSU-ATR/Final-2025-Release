@@ -29,6 +29,7 @@ class PNAConfigViewController:
     default_calset = 'CH1_CALREG'
     
     def __init__(self, parent, calset):
+        # Determine calibration defaults/options
         if calset:
             default_calset = calset
         #(start, _from, to, increment)
@@ -92,10 +93,10 @@ class PNAConfigViewController:
             averaging_points=int(config_values.get("averaging_points")),
         )
     
-    def set_config_values(self, PNAConfig: PNAConfig):
+    def set_config_values(self, PNAConfig: PNAConfig): 
         config_dict = PNAConfig.to_dict()
         config_dict['start_frequency'] = config_dict['start_frequency']/self.GHz_to_Hz
-        config_dict['stop_frequency'] = config_dict['stop_frequency']/self.GHz_to_Hz
+        config_dict['stop_frequency'] = config_dict['stop_frequency']/self.GHz_to_Hz 
 
         # Create new dictionary with renamed keys
         renamed = {self.key_map.get(k, k): v for k, v in config_dict.items()}

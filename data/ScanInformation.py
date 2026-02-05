@@ -22,35 +22,34 @@ class ScanInformation:
         self.description = new_desc
 
     def update_dataframe(self, new_scan_data, position):
-        # Extract X, Y, Z, Polar, Azimuth, Elevation from grbl_response
-        if position is None:
+        # Validate inputs early
+        if new_scan_data is None:
+            Logger.ui("update_dataframe() received None for new_scan_data", source=self.source, level="warning")
             return
-        
-        X, Y, Z, Polar, Azimuth, Elevation = position
-        
-        new_scan_data_length = len(new_scan_data)
-        
-        # Create a temporary DataFrame for the position values
-        temp_data = pd.DataFrame({
-            'X': [X] * new_scan_data_length,
-            'Y': [Y] * new_scan_data_length,
-            'Z': [Z] * new_scan_data_length,
-            'Polar': [Polar] * new_scan_data_length,
-            'Azimuth': [Azimuth] * new_scan_data_length,
-            'Elevation': [Elevation] * new_scan_data_length
-        })
-        
-        # Ensure new_scan_data has a matching index and columns
-        new_scan_data.reset_index(drop=True, inplace=True)
-        
-        # Combine temp_data (position data) and new_scan_data
-        combined_data = temp_data.join(new_scan_data)
-        
-        # Ensure the columns match the order defined in 'columns'
-        formatted_new_scan_dataframe = combined_data[self.columns]
-        
-        # Use np.vstack to vertically stack the current scan_data with the new data
-        new_values = np.vstack([self.data.values, formatted_new_scan_dataframe.values])
-        
-        # Create a new DataFrame from the stacked values
-        self.data = pd.DataFrame(new_values, columns=self.columns)
+        if position is None:
+            Logger.ui("update_dataframe() received None for position", source=self.source, level="warning")
+            return
+
+        try:
+            X, Y, Z, Polar, Azimuth, Elevation = position
+            new_scan_data_length = len(new_scan_data)
+
+            temp_data = pd.DataFrame({
+                'X': [X] * new_scan_data_length,
+                'Y': [Y] * new_scan_data_length,
+                'Z': [Z] * new_scan_data_length,
+                'Polar': [Polar] * new_scan_data_length,
+                'Azimuth': [Azimuth] * new_scan_data_length,
+                'Elevation': [Elevation] * new_scan_data_length
+            })
+
+            new_scan_data.reset_index(drop=True, inplace=True)
+            combined_data = temp_data.join(new_scan_data)
+            formatted_new_scan_dataframe = combined_data[self.columns]
+
+            new_values = np.vstack([self.data.values, formatted_new_scan_dataframe.values])
+            self.data = pd.DataFrame(new_values, columns=self.columns)
+
+        except Exception as e:
+            Logger.ui(f"Failed to update dataframe: {e}", source=self.source, level="error")
+

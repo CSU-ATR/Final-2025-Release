@@ -73,6 +73,7 @@ class InterfaceManager:
                 result[axis] = {}
                 
     def configure_pna(self, PNAConfig: PNAConfig):
+        # print(PNAConfig)
         self.pna.configure_analyzer(PNAConfig)
         self.pna_sweep_time = self.pna.sweep_time
         
