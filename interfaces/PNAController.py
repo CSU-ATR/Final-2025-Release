@@ -96,6 +96,8 @@ class PNA:
         self.send_command("*RST", expect_response=False)
         self.send_command("*CLS", expect_response=False)
         
+
+        print(f"S Param: {settings.s_parameter}")
         self.send_command(f"CALCulate1:PARameter:DEFine 'Meas1', {settings.s_parameter}", expect_response=False)
         self.send_command("DISPlay:WINDow1:TRACe1:FEED 'Meas1'", expect_response=False)
 
@@ -110,13 +112,16 @@ class PNA:
         self.send_command("INITiate1:CONTinuous OFF", expect_response=False)
         self.send_command("TRIGger:SEQuence:SINGle", expect_response=False)
         self.send_command("FORMat:DATA ASCii", expect_response=False)
-        
+        # Cal Set Configuration
+        self.send_command(f"SENS:CORR:CSET:ACT '{settings.cal_set}'", expect_response=False)
+
+        time.sleep(0.5) # Allow settings to take effect
         self.sweep_time = self.send_command("SENSe1:SWEEp:TIME?")
-        print(f"Sweep time is: {self.sweep_time} seconds")
         self.sweep_time = float(self.sweep_time) #Convert sweep time to a float
         self.sweep_time = self.sweep_time + self.sweep_time*0.1 #add 10% to its time so that a sweep can be garunteed finished
+        print(f"Sweep time is: {self.sweep_time} seconds")
+        time.sleep(5) #Extra wait to ensure settings are applied
         
-        self.send_command(f"SENS:CORR:CSET:ACT '{settings.cal_set}'", expect_response=False)
 
     def fetch_data(self):
         self.send_command("*CLS", expect_response=False)

@@ -55,3 +55,4 @@ class ProcedureManager:
             data = self.interfaceManager.fetch_pna_data()
             position = self.interfaceManager.get_grbl_position()
             self.dataManager.update_data(data, position)
+        self.interfaceManager.output_message("SCAN COMPLETE")

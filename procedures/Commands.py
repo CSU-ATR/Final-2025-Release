@@ -157,11 +157,16 @@ class Commands:
             self.datamanager.AxesConfig = new_config
 
     def scan(self, args=None):
-        # Sync GUI axis settings into DataManager before running the scan
+        # Sync GUI axis and PNA settings into DataManager before running the scan
         try:
             self.update_axis_config()
         except Exception as e:
             self.output_message(f"Failed to update axis configuration: {e}", level="error")
+            return
+        try:
+            self.update_pna_config()
+        except Exception as e:
+            self.output_message(f"Failed to update PNA configuration: {e}", level="error")
             return
 
         if USE_THREADING:
@@ -202,4 +207,19 @@ class Commands:
             #self.output_message("Axes configuration updated from UI")
         except Exception as e:
             self.output_message(f"Error updating axes config: {e}", level="error")
+
+    def update_pna_config(self):
+        # If getter isn't configured yet (startup ordering) silently return
+        if not self.get_pna_config:
+            #self.output_message("No PNA config getter configured", level="error")
+            return
+        try:
+            new_pna = self.get_pna_config()
+            if new_pna is None:
+                self.output_message("GUI returned no PNA configuration", level="error")
+                return
+            self.datamanager.PNAConfig = new_pna
+            #self.output_message("PNA configuration updated from UI")
+        except Exception as e:
+            self.output_message(f"Error updating PNA config: {e}", level="error")
 

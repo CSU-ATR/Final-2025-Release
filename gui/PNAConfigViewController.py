@@ -29,6 +29,7 @@ class PNAConfigViewController:
     default_calset = 'CH1_CALREG'
     
     def __init__(self, parent, calset):
+        # Determine calibration defaults/options
         if calset:
             default_calset = calset
         #(start, _from, to, increment)

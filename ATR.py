@@ -18,7 +18,6 @@ import atexit
 #I hope to someday secretly deploy the fixed version post graduation but who knows.
 #If you want help you can try to contact me at tuclaure@gmail.com, but uncertain how long ill remember shit about this
 #Dont judge too harshly :(
-
 def on_exit():
     """Define Exit behavior even if Unexpected"""
     try:
