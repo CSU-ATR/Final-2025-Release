@@ -1,9 +1,14 @@
+<<<<<<< Updated upstream
 # Integration Complete: S1P Plotter & Report Maker
 
 ## Summary
 
 Your `.s1p` plotter and report maker project has been successfully integrated into your ATR (Antenna Testing and Reporting) software. The integration provides a complete S-parameter analysis workflow with professional PDF report generation.
 
+=======
+## Summary
+
+>>>>>>> Stashed changes
 ## What Was Integrated
 
 ### 1. **Core Analysis Libraries** (`reporting/antennareport_lib/`)
