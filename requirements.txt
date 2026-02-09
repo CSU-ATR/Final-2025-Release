@@ -1,0 +1,21 @@
+# ATR Software Dependencies
+# Install with: pip install -r requirements.txt
+
+# Core dependencies
+numpy>=1.21.0
+pandas>=1.3.0
+matplotlib>=3.4.0
+scipy>=1.7.0
+
+# RF/Antenna analysis
+scikit-rf>=0.24.0
+
+# PDF Report generation
+reportlab>=3.6.0
+
+# GUI
+# tkinter comes with Python
+
+# Optional/existing dependencies that may be needed
+# pyserial  # For GRBL serial communication
+# visa  # For PNA communication
