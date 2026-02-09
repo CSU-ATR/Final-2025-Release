@@ -1,0 +1,2 @@
+design_freq_ghz: 2.4
+notes: Patch Antenna
