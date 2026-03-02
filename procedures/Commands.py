@@ -182,8 +182,14 @@ class Commands:
             self.scan_stop_event.set()
             
     def graph(self, args=None):
+        """Launch the graphing window.
+
+        If a scan is currently running, the graph manager will now receive live
+        updates from the shared ``DataManager`` instance so points appear as
+        they are added.
+        """
         self.output_message("Launching Graphing Window")
-        app = GraphManager(self.tk_root)
+        app = GraphManager(self.tk_root, data_manager=self.datamanager)
         app.run()
 
     def home_configuration(self, args=None):

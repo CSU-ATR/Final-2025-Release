@@ -1,7 +1,8 @@
 from gui.GRBLConfigViewController import GRBLConfigViewController
 from gui.PNAConfigViewController import PNAConfigViewController
 from gui.TerminalViewController import TerminalViewController
-from gui.ReportGeneratorViewController import ReportGeneratorViewController
+# report generator removed
+
 
 from procedures.Commands import Commands
 
@@ -46,10 +47,6 @@ class GUIManager:
         control_frame.grid_columnconfigure(0, weight=1)
         control_frame.grid_columnconfigure(1, weight=1)
         
-        # Reports tab
-        reports_frame = ttk.Frame(self.notebook)
-        self.notebook.add(reports_frame, text="Reports")
-        self.ReportGeneratorViewController = ReportGeneratorViewController(reports_frame)
         
         # Set root window size
         self.root.geometry('800x700')
