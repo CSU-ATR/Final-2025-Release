@@ -1,0 +1,28 @@
+# ATR Software Dependencies
+# Install with: pip install -r requirements.txt
+
+# Core dependencies
+numpy>=1.23.0
+pandas>=1.5.0
+matplotlib>=3.6.0
+scipy>=1.9.0
+
+# HDF5 storage
+h5py>=3.7.0
+
+# RF/Antenna analysis
+scikit-rf>=0.25.0
+
+# Serial / device communication
+pyserial>=3.5
+
+# PDF Report generation (used by reporting/antennareport_lib)
+# reportlab>=3.6.0  # removed along with reporting functionality
+
+
+
+Pillow>=9.0.0
+scikit-image>=0.20.0
+
+
+

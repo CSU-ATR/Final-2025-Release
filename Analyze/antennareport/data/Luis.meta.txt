@@ -1,0 +1,2 @@
+design_freq_ghz: 3.0
+notes: Hex Antenna

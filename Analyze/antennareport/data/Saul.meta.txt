@@ -1,0 +1,2 @@
+design_freq_ghz: 2.3
+notes: Slot Antenna

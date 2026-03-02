@@ -1,0 +1,2 @@
+design_freq_ghz: 1.66667
+notes: Custom Patch Antenna

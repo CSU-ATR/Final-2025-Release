@@ -1,0 +1,2 @@
+design_freq_ghz: 1.666
+notes: Dipole Antenna

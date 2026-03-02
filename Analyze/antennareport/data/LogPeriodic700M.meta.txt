@@ -1,0 +1,2 @@
+design_freq_ghz: 0.7 
+notes: Log Periodic Antenna, wideband. Borrowed for CubeSat. 
